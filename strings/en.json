@@ -1,0 +1,17 @@
+{
+  "app_name": "Noon App",
+  "login" :    "Login" ,
+  "user_name" : " User Name " ,
+  "password" : " Password"  ,
+  "org_id" : " Organization ID"  ,
+  "fill_data": "Fill All Data",
+  "error" : "Error , try again ",
+  "no_internet" : "No Internet Connection ",
+  "no_requests" : "No Requests Found",
+  "confirm_delete": "Request will delete with all products",
+  "delete": "Delete",
+  "edit":   "Edit"
+
+
+
+}
