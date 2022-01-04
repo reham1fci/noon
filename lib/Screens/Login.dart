@@ -1,5 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:noon/ApiConnection/Api.dart';
+import 'package:noon/Model/User.dart';
+import 'package:noon/Screens/Main.dart';
+import 'package:noon/Tools/Methods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
 import '../my_colors.dart';
@@ -20,8 +24,6 @@ class LoginState  extends State<Login>{
   late SharedPreferences sharedPrefs ;
   bool loading = false ;
   Api api  =  Api();
-  bool isFirstLogin  = true  ;
-  bool configFound  = false  ;
   bool invoicesFound  = false  ;
   Methods methodsTool = Methods() ;
   late User  user;
@@ -38,7 +40,7 @@ class LoginState  extends State<Login>{
     // TODO: implement build
     return  Scaffold(
       appBar:  AppBar(backgroundColor: MyColors.colorPrimary,),
-
+backgroundColor: MyColors.white,
       body:   Center(
 
           child:   Column(
@@ -48,7 +50,7 @@ class LoginState  extends State<Login>{
               loading? const Center(
                 child: CircularProgressIndicator(),
               ): const SizedBox(),
-              Image.asset('images/logo.png'  , height: 100, width: 150,),
+            Padding(padding: const EdgeInsets.only(bottom: 20.0) , child: Image.asset('images/logo.png'  , height: 170, )),
               orgIdEdFun(),
               userNameEdFun(),
               passEdFun(),
@@ -68,16 +70,29 @@ class LoginState  extends State<Login>{
           bool isValidate =   loginValidation(userId ,password , orgId)  ;
           if(isValidate){
             loading = true  ;
-            api.login(userId:userId , orgId:orgId , onError:  onError, onLogin:
+            api.login(userId:userId , orgId:orgId , onError:  (String errorMsg
+                ){
+              methodsTool.Dialog(context: context  , title: AppLocalizations.of(context)?.translate("error")??"error"
+                  , isCancelBtn: false ,message:errorMsg  , onOkClick: (){} ) ;
+            }
+
+                , onLogin:
             onLogin, password: password) ;
           }
           else{
-            onError(AppLocalizations.of(context)?.translate("fill_data")??"error")  ;
+            methodsTool.Dialog(context: context  , title: AppLocalizations.of(context)?.translate("error")??"error"
+          , isCancelBtn: false ,message:AppLocalizations.of(context)?.translate("fill_data")??"error"  , onOkClick: (){} ) ;
           }
         });
 
       });
-    },notConnect: (){onError(AppLocalizations.of(context)?.translate("no_internet")??" No Internet Connection") ;}) ;
+    },notConnect: (){
+      methodsTool.Dialog(context: context  , title: AppLocalizations.of(context)?.translate("error")??"error"
+          , isCancelBtn: false ,message:AppLocalizations.of(context)?.translate("no_internet")??"No Internet Connection"  , onOkClick: (){} ) ;
+
+  });
+
+
   }
   void onLogin (User  user ) {
     setState(() {
@@ -85,69 +100,16 @@ class LoginState  extends State<Login>{
       print(user.toString());
       saveUserData(user);
       Navigator.pushReplacement( context,
-          MaterialPageRoute(builder: (context) => RequestsList())) ;
+          MaterialPageRoute(builder: (context) => Main())) ;
     });
   }
   void saveUserData (User user )async {
     sharedPrefs = await SharedPreferences.getInstance();
-    user.isSellingPriceView = true ;
-    user.isCostPriceView  = false  ;
-    Setting setting  = Setting(currency:"ريال"  , discountIsPer: true , priceWTax:false , taxPer:15.0 ) ;
-    sharedPrefs.setString("setting", json.encode(setting.toJsonShared()) );
-
+   // Setting setting  = Setting(currency:"ريال"  , discountIsPer: true , priceWTax:false , taxPer:15.0 ) ;
+    //sharedPrefs.setString("setting", json.encode(setting.toJsonShared()) );
     sharedPrefs.setString("user", json.encode(user.toJson()) );
-    api.getVendor(onSuccess:(List<Vendor> vendorsList  ){
-      dbHelper.insertVendors(vendorsList, VENDOR_TB ,  err: (e) {
-        {
-          print(e.toString());
-        }
-      } , onSuccess: ( value){
-        print(value) ;
-      }) ;
-
-      /* for(int i  =  0  ;  i  < vendorsList.length  ;  i  ++) {
-            Vendor  vendor  =  vendorsList[i] ;
-           dbHelper.insert(vendor.insertDb(), VENDOR_TB ,  err: (e){
-             print (e.toString()) ;
-           }) ;
-         }*/
-
-    }
-        ,onError:(){
-
-
-
-        }) ;
   }
-  Future<void> onError(String message ) async {
-    setState(() {
-      loading = false ;
-    });
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)?.translate("error") ?? "error"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
   bool loginValidation (String name  , String password , String orgId){
     if(name.isEmpty) {
       return false  ;
@@ -184,7 +146,7 @@ class LoginState  extends State<Login>{
     return  Padding(padding: const EdgeInsets.only(bottom: 8.0 , left: 30.0  , right: 30.0 , top: 8.0) ,
       child:   TextField(controller:  userNameEd,
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)?.translate("user_name") ,
+            hintText: AppLocalizations.of(context)?.translate("user_id") ,
             fillColor: Colors.white,
             filled: false,
             enabled: loginDataEnable,
@@ -196,7 +158,7 @@ class LoginState  extends State<Login>{
     ;
   }
   Padding orgIdEdFun() {
-    return  Padding(padding: const EdgeInsets.only(bottom: 8.0 , left: 30.0  , right: 30.0 , top: 8.0) ,
+    return  Padding(padding: const EdgeInsets.only(bottom: 8.0 , left: 30.0  , right: 30.0 , top: 30.0) ,
       child:   TextField(controller:  orgEd,
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)?.translate("org_id") ,

@@ -2,6 +2,7 @@
   "app_name": "Noon App",
   "login" :    "Login" ,
   "user_name" : " User Name " ,
+  "user_id" : " User  ID " ,
   "password" : " Password"  ,
   "org_id" : " Organization ID"  ,
   "fill_data": "Fill All Data",
@@ -10,8 +11,31 @@
   "no_requests" : "No Requests Found",
   "confirm_delete": "Request will delete with all products",
   "delete": "Delete",
-  "edit":   "Edit"
-
-
-
+  "edit":   "Edit",
+  "bank": "Bank" ,
+  "fund": "Fund",
+  "opening": "Opening Balance",
+  "movement": "The Movement" ,
+  "final": "The Final Balance" ,
+  "balances": "Balances" ,
+  "process": "Process",
+  "receipts_payments": "Receipts and Payments",
+  "cash_receipt": "Cash Receipt",
+  "cash_exchange": "Cash Exchange",
+  "checks_payable": "Checks Payable",
+  "checks_receivable": "Checks Receivable",
+  "receipts": "Receipts",
+  "payments": "Payments" ,
+  "month": "Month",
+  "month_receipts_payments": " Monthly Receipts and Payments",
+  "from": "From Month",
+  "to": "To Month",
+  "accounting": "Accounting",
+  "home": "Home",
+  "sales": "the Sales" ,
+  "stocks": "the Stocks" ,
+  "purchases": "the Purchases" ,
+  "logout": "Logout" ,
+  "notification":"Notification"  ,
+  "contact": "Contact Us"
 }

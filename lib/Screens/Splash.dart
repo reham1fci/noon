@@ -1,6 +1,9 @@
 
 import 'dart:convert';
 import 'package:noon/Model/User.dart';
+import 'package:noon/Screens/AccBalance.dart';
+import 'package:noon/Screens/AccMonthReceiptsPayments.dart';
+import 'package:noon/Screens/AccReceiptsPayments.dart';
 import 'package:noon/Screens/Main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
@@ -41,7 +44,7 @@ class _MySplashState extends State<Splash> {
     else{
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Login()),
+        MaterialPageRoute(builder: (context) =>   const Main()),
       ) ; }
   }
   @override
@@ -59,6 +62,7 @@ class _MySplashState extends State<Splash> {
                   fit: BoxFit.cover,
                   repeat: ImageRepeat.noRepeat,
                   width: 200.0,
+                   height: 200.0,
                 ),
                 // Padding (child:
                 const   Spacer(),
@@ -66,12 +70,12 @@ class _MySplashState extends State<Splash> {
                 Text(AppLocalizations.of(context)?.translate("app_name") ?? "" ,style:   const  TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0 ,
-                    color: MyColors.blue
+                    color: MyColors.colorPrimaryDark
                 ),),
                 //  padding:const EdgeInsets.all(100),) ,
                 const   Spacer(),
 
-                const  CircularProgressIndicator(),
+                const  CircularProgressIndicator(color: MyColors.colorPrimaryDark,),
                 const   Spacer(),
 
 
